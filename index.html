@@ -34,9 +34,11 @@ button.addEventListener('pointerup', function(event) {
   return characteristic.readValue();
 })
 .then(value => {
-  console.log('network info is ' + value.toString()+" l: "+value.length);
-    for (var i=0; i < value.length; i++) {
-      var v=value[i];
+    var str=bufferToString(value);
+  console.log('network info is ' + str+" l: "+str.length);
+    var a = JSON.parse(str);
+    for (var i=0; i < a.length; i++) {
+      var v=a[i];
       console.log(v['iface']);
        console.log(v['ip']);
     }
@@ -58,4 +60,10 @@ button.addEventListener('pointerup', function(event) {
   var dbutton = document.getElementById('disc');
   dbutton.addEventListener('pointerup', onDisconnectButtonClick());
   
+  function bufferToString(buffer) {
+    var enc = new TextDecoder("utf-8");
+    var str = enc.decode(buffer);
+   console.log(str);
+    return str;
+  }
 </script>
