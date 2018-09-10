@@ -13,7 +13,26 @@
     services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
   }]
 })
-.then(device => { console.log(device); })
+.then(device => {
+  // Human-readable name of the device.
+  console.log(device.name);
+
+  // Attempts to connect to remote GATT Server.
+  return device.gatt.connect();
+})
+.then(server => server.getPrimaryService(serviceUuid))
+.then(service => service.getCharacteristic(characteristicUuid))
+.then(characteristic => {
+  // Writing 1 is the signal to reset energy expended.
+  //var resetEnergyExpended = Uint8Array.of(1);
+  //return characteristic.writeValue(resetEnergyExpended);
+         console.log(characteristic.readValue());
+})
+.then(_ => {
+  console.log('network info read.');
+})
+.catch(error => { console.log(error); });
+
 .catch(error => { console.log(error); });
 });
  
