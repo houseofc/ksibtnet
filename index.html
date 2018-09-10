@@ -16,7 +16,7 @@ button.addEventListener('pointerup', function(event) {
 .then(device => {
     bluetoothDevice = device;
    // bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
-    return connect();
+    return bluetoothDevice.gatt.connect()
   })  
 .then(server => {
   // Getting SAM Service...
