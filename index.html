@@ -1,5 +1,16 @@
 <h1>foo</h1>
 <script>
+      // Add a global error event listener early on in the page load, to help ensure that browsers
+      // which don't support specific functionality still end up displaying a meaningful message.
+      window.addEventListener('error', function(error) {
+        if (ChromeSamples && ChromeSamples.setStatus) {
+          console.error(error);
+          ChromeSamples.setStatus(error.message + ' (Your browser may not support this feature.)');
+          error.preventDefault();
+        }
+      });
+    </script>
+<script>
   navigator.bluetooth.requestDevice({
   filters: [{
     services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
