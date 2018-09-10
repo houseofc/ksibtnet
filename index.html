@@ -36,7 +36,7 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(value => {
     console.log(typeof(value.buffer));
-    var str = new TextDecoder("utf-8").decode(value.buffer);
+    var str = uintToString(value.buffer);
     
   console.log('network info is ' + str+" l: "+str.length);
     var a = JSON.parse(str);
@@ -63,6 +63,10 @@ button.addEventListener('pointerup', function(event) {
   var dbutton = document.getElementById('disc');
   dbutton.addEventListener('pointerup', onDisconnectButtonClick());
   
-
+function uintToString(uintArray) {
+    var encodedString = String.fromCharCode.apply(null, uintArray),
+        decodedString = decodeURIComponent(escape(encodedString));
+    return decodedString;
+}
 </script>
  
