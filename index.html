@@ -1,4 +1,5 @@
 <h1>foo</h1>
+<button id="list">List</button>
 <script>
       // Add a global error event listener early on in the page load, to help ensure that browsers
       // which don't support specific functionality still end up displaying a meaningful message.
@@ -11,11 +12,15 @@
       });
     </script>
 <script>
-  navigator.bluetooth.requestDevice({
+  var button = document.getelementbyid("list");
+  button.addEventListener('pointerup', function(event) {
+   navigator.bluetooth.requestDevice({
   filters: [{
     services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
   }]
 })
 .then(device => { /* ... */ })
 .catch(error => { console.log(error); });
+});
+ 
 </script>
