@@ -1,5 +1,8 @@
 <h1>foo</h1>
 <button id="list">List</button>
+<br>
+<button id="disc">disc</button>
+
 
 <script>
   var bluetoothDevice;
@@ -32,10 +35,27 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(value => {
   console.log('network info is ' + value.toString());
+    for (var i=0; i < value.length; i++) {
+      var v=value[i];
+      console.log(v['iface']);
+       console.log(v['ip']);
+    }
+      
 })
-.then(bluetoothDevice.gatt.disconnect())
 .catch(error => { console.log(error); });        
  })
-     
-  
+ 
+  function onDisconnectButtonClick() {
+  if (!bluetoothDevice) {
+    return;
+  }
+  log('Disconnecting from Bluetooth Device...');
+  if (bluetoothDevice.gatt.connected) {
+    bluetoothDevice.gatt.disconnect();
+  } else {
+    log('> Bluetooth Device is already disconnected');
+  }
+}
+  var dbutton = document.getElementById('disc');
+  dbutton.addEventListener('pointerup', onDisconnectButtonClick());
 </script>
