@@ -35,7 +35,7 @@ button.addEventListener('pointerup', function(event) {
   return characteristic.readValue();
 })
 .then(value => {
-    console.log(typeof(value));
+    console.log(JSON.stringify(value));
     console.log(value.length);
     console.log(value.toString());
     var str = uintToString(value.buffer);
@@ -71,7 +71,7 @@ function uintToString(uintArray) {
     return decodedString;
 }
  
-  
+ 
   
 </script>
  
