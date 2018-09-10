@@ -34,7 +34,7 @@ button.addEventListener('pointerup', function(event) {
   return characteristic.readValue();
 })
 .then(value => {
-  console.log('network info is ' + value.toString());
+  console.log('network info is ' + value.toString()+" l: "+value.length);
     for (var i=0; i < value.length; i++) {
       var v=value[i];
       console.log(v['iface']);
