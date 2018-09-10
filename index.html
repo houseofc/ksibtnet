@@ -28,6 +28,7 @@ button.addEventListener('pointerup', function(event) {
 .then(value => {
   console.log('network info is ' + value.toString());
 })
+.then(device => device.gatt.disconnect())
 .catch(error => { console.log(error); });        
  })
     
