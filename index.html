@@ -12,14 +12,18 @@
       });
     </script>
 <script>
-  var button = document.getelementbyid("list");
+      let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
+  
+
+  let characteristicUuid = '7d0c1007-e156-4be7-ae55-8b2d90e3af9f';
+  var button = document.getElementById("list");
   button.addEventListener('pointerup', function(event) {
    navigator.bluetooth.requestDevice({
   filters: [{
     services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
   }]
 })
-.then(device => { /* ... */ })
+.then(device => { console.log(device); })
 .catch(error => { console.log(error); });
 });
  
