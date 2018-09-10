@@ -1,1 +1,10 @@
 <h1>foo</h1>
+<script>
+  navigator.bluetooth.requestDevice({
+  filters: [{
+    services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
+  }]
+})
+.then(device => { /* ... */ })
+.catch(error => { console.log(error); });
+</script>
