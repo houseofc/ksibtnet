@@ -1,0 +1,2 @@
+# ksibtnet
+bluetooth network config
