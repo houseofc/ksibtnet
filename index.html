@@ -2,6 +2,7 @@
 <button id="list">List</button>
 
 <script>
+  var bluetoothDevice;
 let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
 let characteristicUuid = '7d0c1007-e156-4be7-ae55-8b2d90e3af9f';
 var button = document.getElementById('list');
@@ -12,7 +13,11 @@ button.addEventListener('pointerup', function(event) {
     services: [serviceUuid]
   }]
 })
-.then(device => device.gatt.connect())
+.then(device => {
+    bluetoothDevice = device;
+   // bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
+    return connect();
+  })  
 .then(server => {
   // Getting SAM Service...
   return server.getPrimaryService(serviceUuid);
