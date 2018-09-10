@@ -2,18 +2,16 @@
 <button id="list">List</button>
 
 <script>
-      let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
-  
+let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
+let characteristicUuid = '7d0c1007-e156-4be7-ae55-8b2d90e3af9f';
+var button = document.getElementById('list');
 
-  let characteristicUuid = '7d0c1007-e156-4be7-ae55-8b2d90e3af9f';
-  var button = document.getElementById('list');
-  button.addEventListener('pointerup', function(event) {
-   navigator.bluetooth.requestDevice({
+button.addEventListener('pointerup', function(event) {
+  navigator.bluetooth.requestDevice({
   filters: [{
-    services: ['7d0c1000-e156-4be7-ae55-8b2d90e3af9f']
+    services: [serviceUuid]
   }]
 })
-
 .then(device => {
   // Human-readable name of the device.
   console.log(device.name);
@@ -37,6 +35,6 @@
   console.log('network info is ' + value.toString());
 })
 .catch(error => { console.log(error); });        
- }
+ })
   
 </script>
