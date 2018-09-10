@@ -12,13 +12,7 @@ button.addEventListener('pointerup', function(event) {
     services: [serviceUuid]
   }]
 })
-.then(device => {
-  // Human-readable name of the device.
-  console.log(device.name);
-
-  // Attempts to connect to remote GATT Server.
-  return device.gatt.connect();
-})
+.then(device => device.gatt.connect())
 .then(server => {
   // Getting SAM Service...
   return server.getPrimaryService(serviceUuid);
