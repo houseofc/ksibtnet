@@ -12,6 +12,7 @@ var button = document.getElementById('list');
 
 button.addEventListener('pointerup', function(event) {
   navigator.bluetooth.requestDevice({
+    acceptAllDevices: true
   //filters: [{
    // services: [serviceUuid]
   //}]
