@@ -33,14 +33,14 @@ button.addEventListener('pointerup', function(event) {
 .then(characteristic => {
   console.log(characteristic);
     var val =  characteristic.readValue();
-   console.log(val);
+   console.log(val.buffer.byteLength);
     //console.log(JSON.stringify(val));
   return val;
 })
 .then(value => {
    // console.log(JSON.stringify(value));
-    console.log(value.buffer.length);
-    console.log(value.toString());
+    console.log(value.buffer.byteLength);
+   // console.log(value.toString());
     var str = uintToString(value.buffer);
     
   console.log('ip is ' + str+" l: "+str.length);
