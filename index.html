@@ -39,7 +39,7 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(value => {
    // console.log(JSON.stringify(value));
-    console.log(value.length);
+    console.log(value.buffer.length);
     console.log(value.toString());
     var str = uintToString(value.buffer);
     
