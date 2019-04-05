@@ -1,7 +1,10 @@
 <h1>foo</h1>
+<br>
 <button id="list">List</button>
 <br>
 <button id="disc">disc</button>
+<br>
+<span id="name">(name)</span> : <span id="ip"><(ip)</span>
 
 
 <script>
@@ -19,6 +22,7 @@ button.addEventListener('pointerup', function(event) {
 .then(device => {
     bluetoothDevice = device;
     console.log(device.name);
+     document.getElementById('name').innerText = device.name;
    // bluetoothDevice.addEventListener('gattserverdisconnected', onDisconnected);
     return bluetoothDevice.gatt.connect()
   })  
@@ -44,6 +48,7 @@ button.addEventListener('pointerup', function(event) {
     var str = ab2str(value.buffer);
     
   console.log('ip is ' + str+" l: "+str.length);
+    document.getElementById('ip').innerText = str;
    // var a = JSON.parse(str);
    // for (var i=0; i < a.length; i++) {
      // var v=a[i];
