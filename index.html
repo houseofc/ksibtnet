@@ -33,23 +33,23 @@ button.addEventListener('pointerup', function(event) {
 .then(characteristic => {
   console.log(characteristic);
     var val =  characteristic.readValue();
-    console.log(val);
-    console.log(JSON.stringify(val));
+   // console.log(val.toString());
+    //console.log(JSON.stringify(val));
   return val;
 })
 .then(value => {
-    console.log(JSON.stringify(value));
+   // console.log(JSON.stringify(value));
     console.log(value.length);
     console.log(value.toString());
     var str = uintToString(value.buffer);
     
-  console.log('network info is ' + str+" l: "+str.length);
-    var a = JSON.parse(str);
-    for (var i=0; i < a.length; i++) {
-      var v=a[i];
-      console.log(v['iface']);
-       console.log(v['ip']);
-    }
+  console.log('ip is ' + str+" l: "+str.length);
+   // var a = JSON.parse(str);
+   // for (var i=0; i < a.length; i++) {
+     // var v=a[i];
+     // console.log(v['iface']);
+     //  console.log(v['ip']);
+    //}
 })
 .catch(error => { console.log(error); });        
  })
