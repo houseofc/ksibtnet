@@ -41,7 +41,7 @@ button.addEventListener('pointerup', function(event) {
    // console.log(JSON.stringify(value));
     console.log(value.buffer.byteLength);
    // console.log(value.toString());
-    var str = uintToString(value.buffer);
+    var str = ab2str(value.buffer);
     
   console.log('ip is ' + str+" l: "+str.length);
    // var a = JSON.parse(str);
@@ -73,6 +73,8 @@ function uintToString(uintArray) {
         decodedString = decodeURIComponent(escape(encodedString));
     return decodedString;
 }
-
+function ab2str(buf) {
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
 </script>
  
