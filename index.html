@@ -9,8 +9,11 @@
 
 <script>
   var bluetoothDevice;
+  let authid = '0EE0E269-AC17-4E39-9859-2D70D3921F13';
 let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
 let characteristicUuid = '7d0c1003-e156-4be7-ae55-8b2d90e3af9f';
+  let authchar = '7d0c1001-e156-4be7-ae55-8b2d90e3af9f';
+  let isauthchar = '7d0c1002-e156-4be7-ae55-8b2d90e3af9f';
 var button = document.getElementById('list');
 
 button.addEventListener('pointerup', function(event) {
@@ -34,11 +37,12 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(service => {
   // Getting netinfo  Characteristic...
-  return service.getCharacteristic(characteristicUuid);
+  // return service.getCharacteristic(characteristicUuid);
+    return service.getCharacteristic(isauthchar);
 })
 .then(characteristic => {
   console.log(characteristic);
-    var val =  characteristic.readValue();
+  //  var val =  characteristic.readValue();
   // console.log(val.buffer.byteLength);
     //console.log(JSON.stringify(val));
   return val;
