@@ -37,8 +37,8 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(service => {
   // Getting netinfo  Characteristic...
-  // return service.getCharacteristic(characteristicUuid);
-    return service.getCharacteristic(isauthchar);
+   return service.getCharacteristic(characteristicUuid);
+  //  return service.getCharacteristic(isauthchar);
 })
 .then(characteristic => {
   console.log(characteristic);
