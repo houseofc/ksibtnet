@@ -42,7 +42,7 @@ button.addEventListener('pointerup', function(event) {
 })
 .then(characteristic => {
   console.log(characteristic);
-  //  var val =  characteristic.readValue();
+    var val =  characteristic.readValue();
   // console.log(val.buffer.byteLength);
     //console.log(JSON.stringify(val));
   return val;
