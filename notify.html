@@ -1,7 +1,5 @@
 <html>
-    <head>
-            <script src="scripts/socket.io.js"></script>
-    </head>
+   
 </html>
 <style>
 div {
@@ -42,7 +40,7 @@ button {
 </div>
 <div id="networkinfo"></div>
 <script>
-	var socket = io.connect(':8080');
+	//var socket = io.connect(':8080');
 	//socket.emit('test',"foo");
 	//console.log(socket);
   	var bluetoothDevice;
@@ -62,7 +60,7 @@ button {
 
 	var netbuffer;
 
-	socket.on('hostreachable', function(reqip){
+	/*socket.on('hostreachable', function(reqip){
 		console.log(reqip+" reachable" );
 		var ret = "<a href=http://"+reqip+">"+reqip+"</a>";
 		document.getElementById('access').innerHTML = ret;
@@ -73,7 +71,7 @@ button {
 		var ret=reqip+" is not reachable";
 		document.getElementById('access').innerHTML = ret;
 		show('access',true);
-	});
+	});*/
 	show('access',false);
 	show('ping',false);
 	show('name',false);
@@ -148,11 +146,11 @@ function read(characteristic) {
         console.log('ip is ' + str+" l: "+str.length);
         document.getElementById('ip').innerText = str;	
         show('ip',true);
-        show('ping',true);	
-        pingbutton.addEventListener('pointerup', function(event) {
-            console.log('ping '+str);
-            socket.emit('reqping',str);
-        });
+       // show('ping',true);	
+        //pingbutton.addEventListener('pointerup', function(event) {
+          //  console.log('ping '+str);
+           // socket.emit('reqping',str);
+        //});
     } else {
         console.log("no value");
     }
