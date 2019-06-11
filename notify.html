@@ -1,0 +1,251 @@
+<html>
+    <head>
+            <script src="scripts/socket.io.js"></script>
+    </head>
+</html>
+<style>
+div {
+	padding: 5px;
+	}
+button {
+	background-color:#aaf;
+	color:#339;
+	border: 1px solid #309;
+	
+	text-align: center;
+	font-size:14px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	padding: 10px;
+}
+</style>
+<h1>KSI Bluetooth Util</h1>
+<div>
+    <span id='demo'></span>
+</div>
+<div>
+<button id="list" onClick='search()'>List SAMs</button>
+</div>
+<div>
+<button id="web">get web addr</button>
+</div>
+<br>
+<div>
+<span id="name">(name)</span> &nbsp;&nbsp; <span id="ip">(ip)</span><br>
+</div>
+<div>
+<button id="ping">ping SAM</button>
+</div>
+<div>
+<span id="access">...</span>
+</div>
+<div id="networkinfo"></div>
+<script>
+	var socket = io.connect(':8080');
+	//socket.emit('test',"foo");
+	//console.log(socket);
+  	var bluetoothDevice;
+  	let authid = '0EE0E269-AC17-4E39-9859-2D70D3921F13';
+	let serviceUuid = '7d0c1000-e156-4be7-ae55-8b2d90e3af9f';
+	let networkUuid = '7d0c1003-e156-4be7-ae55-8b2d90e3af9f';
+	let webaddrUuid = '7d0c1003-e156-4be7-ae55-8b2d90e3af9f';
+  	let authchar = '7d0c1001-e156-4be7-ae55-8b2d90e3af9f';
+  	let isauthchar = '7d0c1002-e156-4be7-ae55-8b2d90e3af9f';
+	
+	var button = document.getElementById('list');
+	var pingbutton = document.getElementById('ping');
+	var webbutton = document.getElementById('web');
+
+	var primaryService; 
+	var networkCharacteristic;
+
+	var netbuffer;
+
+	socket.on('hostreachable', function(reqip){
+		console.log(reqip+" reachable" );
+		var ret = "<a href=http://"+reqip+">"+reqip+"</a>";
+		document.getElementById('access').innerHTML = ret;
+		show('access',true);
+	});
+	socket.on('hostunreachable', function(reqip){
+		console.log(reqip+" unreachable" );	
+		var ret=reqip+" is not reachable";
+		document.getElementById('access').innerHTML = ret;
+		show('access',true);
+	});
+	show('access',false);
+	show('ping',false);
+	show('name',false);
+	show('ip',false);
+	show('web',false);
+	
+    let chosenSAMService = null;
+//
+
+
+async function search() {
+  try {
+    console.log('Requesting Bluetooth Device...');
+    const device = await navigator.bluetooth.requestDevice({
+        filters: [{
+    			namePrefix: 'BT_'
+  			}],
+  			optionalServices: [serviceUuid]
+		});
+
+        console.log('Connecting to GATT Server...');
+    const server = await device.gatt.connect();
+
+    console.log('Getting Service...');
+    const service = await server.getPrimaryService(serviceUuid);
+
+    console.log('Getting Characteristic...');
+    networkCharacteristic = await service.getCharacteristic(networkUuid);
+
+    await networkCharacteristic.startNotifications();
+
+    console.log('> Notifications started');
+    networkCharacteristic.addEventListener('characteristicvaluechanged',
+        handleNotifications);
+  } catch(error) {
+    console.log('Argh! ' + error);
+  }
+}
+
+async function onStopButtonClick() {
+  if (networkCharacteristic) {
+    try {
+      await networkCharacteristic.stopNotifications();
+      console.log('> Notifications stopped');
+      networkCharacteristic.removeEventListener('characteristicvaluechanged',
+          handleNotifications);
+    } catch(error) {
+        console.log('Argh! ' + error);
+    }
+  }
+}
+
+
+
+    //
+
+function snot(characteristic) {
+    networkCharacteristic = characteristic;
+    return characteristic.startNotifications().then(_ => {
+      console.log('> Notifications started');
+      characteristic.addEventListener('characteristicvaluechanged',
+          handleNotifications);
+    });
+}
+function read(characteristic) {
+    console.log(characteristic);
+    var value = characteristic.readValue();
+    console.log(value);
+    if (value != null) {
+        console.log(value.buffer.byteLength);
+        var str = ab2str(value.buffer);
+        console.log('ip is ' + str+" l: "+str.length);
+        document.getElementById('ip').innerText = str;	
+        show('ip',true);
+        show('ping',true);	
+        pingbutton.addEventListener('pointerup', function(event) {
+            console.log('ping '+str);
+            socket.emit('reqping',str);
+        });
+    } else {
+        console.log("no value");
+    }
+}
+function readn(characteristic) {
+
+  return characteristic.startNotifications()
+    .then(char => {
+      characteristic.addEventListener('characteristicvaluechanged',
+        onHeartRateChanged);
+    });
+
+}
+//var tmp_count = 0 ;
+//function onHeartRateChanged(event) {
+  //var value = event.target.value;
+  //document.getElementById("data").innerHTML = "Received" + sensorLocation;
+  //tmp_count ++ ;
+  //document.getElementById("data").innerHTML=tmp_count;
+//}
+
+//function w(characteristic) {
+  //let resetEnergyExpended = new Uint8Array([34, 8, 35, 7]);
+  //characteristic.writeValue(resetEnergyExpended);
+  //document.getElementById("w").innerHTML = "write";
+//}
+    //
+
+
+	
+function onDisconnectButtonClick() {
+	if (!bluetoothDevice) {
+		return;
+	}
+	console.log('Disconnecting from Bluetooth Device...');
+	if (bluetoothDevice.gatt.connected) {
+		bluetoothDevice.gatt.disconnect();
+	} else {
+		console.log('> Bluetooth Device is already disconnected');
+	}
+}
+function handleNotifications(event) {
+  let value = event.target.value;
+  var str = ab2str(value.buffer);
+  if (str == "EOM") {
+	networkInfoDone();
+  } else {
+	netbuffer = netbuffer+str;
+	document.getElementById('networkinfo').innerText = str;
+  }
+
+
+}
+
+function networkInfoDone() {
+  if (networkCharacteristic) {
+    networkCharacteristic.stopNotifications()
+    .then(_ => {
+      console.log('> Notifications stopped');
+      networkCharacteristic.removeEventListener('characteristicvaluechanged',
+          handleNotifications);
+    })
+    .catch(error => {
+      console.log('Argh! ' + error);
+    });
+  }
+}
+//
+//	var dbutton = document.getElementById('disc');
+//  dbutton.addEventListener('pointerup', onDisconnectButtonClick());
+function uintToString(uintArray) {
+    var encodedString = String.fromCharCode.apply(null, uintArray),
+        decodedString = decodeURIComponent(escape(encodedString));
+    return decodedString;
+}
+function ab2str(buf) {
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+function str2ab(str) {
+  var buf = new ArrayBuffer(str.length); // 1 byte for each char
+  var bufView = new Uint8Array(buf);
+  for (var i=0, strLen=str.length; i<strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
+}
+function show(id,show) {
+	if (show) {
+		document.getElementById(id).style.visibility = "visible";
+	} else {
+		document.getElementById(id).style.visibility = "hidden";
+	}
+}
+</script>
+
+ 
